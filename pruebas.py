@@ -13,17 +13,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def pruebas_imprimir_boleta(numero_pedido):
-    service = Service('./chromedriver.exe')  # Ej: 'chromedriver.exe' si está en la misma carpeta
+    service = Service('./chromedriver.exe')
     options = webdriver.ChromeOptions()
 
+    # ✅ Activar impresión sin diálogo
+    options.add_argument('--kiosk-printing')
+
     driver = webdriver.Chrome(service=service, options=options)
+    driver.get('https://v2.be-flow.com/login')
 
-    # URL objetivo
-    url = 'https://v2.be-flow.com/login'
-    driver.get(url)
-
-
-    # Buscar campos de login y completar e iniciar sesión
     driver.find_element(By.NAME, "email").send_keys(os.getenv("BEFLOW_EMAIL"))
     driver.find_element(By.NAME, "password").send_keys(os.getenv("BEFLOW_PASSWORD"))
     botonIniciarSesion = driver.find_element(By.CSS_SELECTOR, ".sc-dwalKd.ewKcxc.amplify-button.secondary")
@@ -33,53 +31,26 @@ def pruebas_imprimir_boleta(numero_pedido):
 
     preparacion_link = driver.find_element(By.XPATH, "//a[span[text()='Preparación']]")
     preparacion_link.click()
-
     time.sleep(3)
 
-    # Encuentra el campo de búsqueda
     campo_busqueda = driver.find_element(By.CSS_SELECTOR, "input.ant-input[placeholder='Búsqueda']")
-
     time.sleep(3)
-
-    # Introduce el número de pedido en el campo de búsqueda
     campo_busqueda.send_keys(numero_pedido)
-
     time.sleep(3)
 
-
-    # Hacer click en el botón de imprimir boleta
-
+    # 🔽 Aquí haces clic en la boleta
     element = driver.find_element(By.CSS_SELECTOR, 'b[role="button"]')
     element.click()
-
     time.sleep(3)
 
-    # Hacer click en el botón de imprimir
-    elemento_imprimir = driver.find_element(By.CSS_SELECTOR, "div.svelte-1w9r7lo.content")
-    elemento_imprimir.click()
+    # ⛔️ Este selector parece incorrecto: "cr-button.action-button[size='small']"
+    # Solo ejecuta click si esto realmente corresponde al botón que dispara la impresión
+    element_imprimir = driver.find_element(By.CSS_SELECTOR, 'cr-button.action-button[size="small"]')
+    element_imprimir.click()
 
-    # time.sleep(3)
-
-    # # Hacer click en el checkbox de pedido
-    # checkbox = driver.find_element(By.CLASS_NAME, "ant-checkbox-input")
-    # checkbox.click()
-
-
-
-    # # Hacer click en el menu desplegable de acciones
-    # boton = driver.find_element(By.CSS_SELECTOR, "button.ant-dropdown-trigger")
-    # boton.click()
-
-
-    # time.sleep(3)
-
-
-    # # Esperar a que aparezca el elemento y luego hacer clic para enviar a entregas
-    # enviar_btn = WebDriverWait(driver, 3).until(
-    # EC.element_to_be_clickable((By.XPATH, "//span[text()='Enviar a entregas (1)']"))
-    # )
-    # enviar_btn.click()
-
-
+    # Espera unos segundos para que la impresión se procese
     time.sleep(10)
+
+    driver.quit()
+
 
