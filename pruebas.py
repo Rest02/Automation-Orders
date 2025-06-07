@@ -38,19 +38,36 @@ def pruebas_imprimir_boleta(numero_pedido):
     campo_busqueda.send_keys(numero_pedido)
     time.sleep(3)
 
-    # 🔽 Aquí haces clic en la boleta
-    element = driver.find_element(By.CSS_SELECTOR, 'b[role="button"]')
-    element.click()
+    # 📄 Click en el botón de boleta
+    driver.find_element(By.CSS_SELECTOR, 'b[role="button"]').click()
+
+
+    time.sleep(5)
+
+    # 🛑 Esperar a que cargue el contenido de la boleta (ajusta el selector si es necesario)
+    WebDriverWait(driver, 15).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "print-preview-app"))
+    )
+
+    # 🧠 Esperar unos segundos extra para asegurar render completo
     time.sleep(3)
 
-    # ⛔️ Este selector parece incorrecto: "cr-button.action-button[size='small']"
-    # Solo ejecuta click si esto realmente corresponde al botón que dispara la impresión
-    element_imprimir = driver.find_element(By.CSS_SELECTOR, 'cr-button.action-button[size="small"]')
-    element_imprimir.click()
+    # 🖨 Inyectar impresión retrasada manualmente (opcional si el sitio lanza window.print solo)
+    driver.execute_script("""
+        const originalPrint = window.print;
+        window.print = function() {
+            console.log("Esperando antes de imprimir...");
+            setTimeout(() => {
+                originalPrint();
+            }, 2000); // 2 segundos de espera
+        };
+    """)
 
-    # Espera unos segundos para que la impresión se procese
-    time.sleep(10)
+    # ✅ Si ya se lanza automáticamente, simplemente espera
+    # Si no, puedes forzarlo con:
+    driver.execute_script("window.print();")
+
+    # Esperar impresión
+    time.sleep(5)
 
     driver.quit()
-
-

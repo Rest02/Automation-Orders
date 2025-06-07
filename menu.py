@@ -21,7 +21,11 @@ while True:
         print("Pedido preparado")
     elif opcion == "2":
         numero_pedido = str(input("Introduce el número de pedido: "))
-        pruebas_imprimir_boleta(numero_pedido)
+        try:
+            pruebas_imprimir_boleta(numero_pedido)
+            print("Boleta impresa correctamente")
+        except Exception as e:
+            print(f"Ocurrió un error al intentar imprimir la boleta: {e}")
     elif opcion == "3":
         break
     else:
