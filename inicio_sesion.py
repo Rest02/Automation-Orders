@@ -21,6 +21,42 @@ def Iniciar_sesion():
     service = Service('./chromedriver.exe')  # Ej: 'chromedriver.exe' si está en la misma carpeta
     options = webdriver.ChromeOptions()
 
+
+    # Agregar configuración de impresión
+    options.add_argument('--kiosk-printing')
+
+
+
+    prefs = {
+        'printing.print_preview_sticky_settings.appState': """
+            {
+                "recentDestinations": [{
+                    "id": "Save as PDF",
+                    "origin": "local",
+                    "account": "",
+                    "name": "Save as PDF"
+                }],
+                "selectedDestinationId": "Save as PDF",
+                "version": 2,
+                "isHeaderFooterEnabled": false,
+                "mediaSize": {
+                    "height_microns": 297000,
+                    "width_microns": 210000,
+                    "name": "ISO_A4"
+                },
+                "marginsType": 1,
+                "scalingType": 3
+            }
+        """,
+        'savefile.default_directory': os.path.abspath("boletas_pdf"),
+        'download.prompt_for_download': False,
+        'download.directory_upgrade': True
+    }
+
+    options.add_experimental_option('prefs', prefs)
+
+
+
     driver = webdriver.Chrome(service=service, options=options)
 
     # URL objetivo

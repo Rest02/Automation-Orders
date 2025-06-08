@@ -65,7 +65,7 @@ def Preparar_pedido(numero_de_pedido):
 
     time.sleep(10)
 
-
+    imprimir_boleta(driver, numero_de_pedido)
 
     # # Refrescar la página en caso de que no se actualice para la boleta
     # driver.refresh()
