@@ -10,6 +10,9 @@ import os
 from dotenv import load_dotenv
 from inicio_sesion import Iniciar_sesion
 from prepr_and_boleta import imprimir_boleta
+from enviar_entregas import enviar_entregas
+
+
 
 # Cargar variables de entorno
 load_dotenv()
@@ -67,27 +70,11 @@ def Preparar_pedido(numero_de_pedido):
 
     imprimir_boleta(driver, numero_de_pedido)
 
-    # # Refrescar la página en caso de que no se actualice para la boleta
-    # driver.refresh()
-    # driver.refresh()
-    # driver.refresh()
+    time.sleep(5)
 
-
-
-    # time.sleep(3)
-
-    # # Encuentra el campo de búsqueda
-    # campo_busqueda = driver.find_element(By.CSS_SELECTOR, "input.ant-input[placeholder='Búsqueda']")
-
-    # # Introduce el número de pedido en el campo de búsqueda
-    # campo_busqueda.send_keys(numero_de_pedido)
-
-
-
+    enviar_entregas(driver)
 
     time.sleep(10)
-    
-    
 
     driver.quit()
 

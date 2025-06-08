@@ -87,6 +87,12 @@ def imprimir_boleta(driver, numero_pedido):
     preparacion_link.click()
     time.sleep(3)
 
+    driver.refresh()
+    driver.refresh()
+    driver.refresh()
+
+    time.sleep(5)
+
     # Buscar el pedido
     campo_busqueda = driver.find_element(By.CSS_SELECTOR, "input.ant-input[placeholder='Búsqueda']")
     time.sleep(3)
@@ -97,8 +103,6 @@ def imprimir_boleta(driver, numero_pedido):
     driver.find_element(By.CSS_SELECTOR, 'b[role="button"]').click()
     time.sleep(3)
 
-
-    driver.quit()
 
     # Renombrar el archivo PDF con el número de pedido
     renombrar_pdf(numero_pedido)
